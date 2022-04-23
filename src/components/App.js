@@ -69,7 +69,7 @@ class App extends React.Component {
 		window.onbeforeunload = function(event) { return "beforeunload"; };
 		
 		// FOR TESTING ONLY
-		//this.loginWrapper();
+		this.loginWrapper();
 
 	}
 
@@ -107,7 +107,6 @@ class App extends React.Component {
 		
 
 	loadDBRecords = async (token) => {
-
 		// load lookup values from DB
 		this.setState( { loadingDB: true, refresh: true});
 		const inventoryEntities = ['modelNumber','category','manufacturer','building','room','shelf'];
@@ -124,9 +123,9 @@ class App extends React.Component {
 			)
 			.catch( () => { return false})
 			if (status === false) return;
+
 			
 		}
-
 		// load inventory DB 
 		let status = await this.RESTHandler('list', {entity: 'item' }, token)
 		.then ( (r) => {
@@ -153,7 +152,7 @@ class App extends React.Component {
 		if (status === false) return;
 
 		this.orderCounter = this.inventoryEntryList.size;	
-		this.setState( { lookupRecords: tempEntities, loadingDB: false } );
+		this.setState( { lookupRecords: tempEntities, loadingDB: false, lastErr:null} );
 		console.log('Inventory DB loaded');
 		console.log(this.inventoryEntryList);
 	}
@@ -164,7 +163,7 @@ class App extends React.Component {
 			this.orderCounter = 0;
 			this.inventoryEntryList.clear();
 			
-			this.setState( { token:null, loginOpenState: true, lastErr: null} );
+			this.setState( { token:null, username:null, password: null, loginOpenState: true, lastErr: null} );
 			console.log('Token removed, user logged out')
 		}
 	}
@@ -199,7 +198,7 @@ class App extends React.Component {
 			}
 
 			if (this.state.lastErr !== null) {
-				errMsg = <div className="ui item red message">{this.state.lastErr}</div>
+				errMsg = <div className="ui item red message"><i class="close icon" onClick={ () => this.setState({lastErr: null})}></i>{this.state.lastErr}</div>
 			}
 
 			// display the inventory list view component if there are items in inventory list

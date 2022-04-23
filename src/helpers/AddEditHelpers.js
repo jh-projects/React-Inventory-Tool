@@ -33,9 +33,10 @@ export async function addEditChecks(e) {
 				throw new Error();
 			}
 		})
-		.catch( () => { return false})
+		.catch( () => { this.setState({lastErr: `Communication error` }, () => false )})
 
 		if (status === false) {
+
 			return [false, this.props.inventoryEntryList.get(this.state.serialNumber)];
 		}
 

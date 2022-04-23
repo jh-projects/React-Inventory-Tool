@@ -38,7 +38,8 @@ class AddDeviceEntry extends React.Component {
 			prevSerialNumber : this.props.prevSerialNumber, // for use while in editing mode
 			listOrderIndex : -1,					// set by parent component once item added to list - for sorting inventory list view and finding conflicting entries
 			conflictEntry: null,						// holds the details of a conflicting entry if found
-			addCounter: 0						// running count of items added while view is opened
+			addCounter: 0,						// running count of items added while view is opened
+			lastErr: null
 		};
 		
 		// remember non-unique details of previous entry for faster entry
@@ -144,10 +145,19 @@ class AddDeviceEntry extends React.Component {
 							<InputText name="serialNumber" disabled={this.props.isEditing} value={this.state.serialNumber}  updateField={this.updateField} />
 
 							<div className="ui grid">
-								<div className="two wide column">
-									<span className="ui olive label">{this.state.addCounter} items added</span>
+								<div className="four wide column">
+									<div className="ui olive message">{this.state.addCounter} items added</div>
 								</div>
-								<div className="fourteen wide column center aligned">
+								<div className="four wide column left aligned">
+									{ this.state.lastErr !== null &&
+									<div className="ui red message">
+										<i class="close icon" onClick={ () => this.setState({lastErr: null})}></i>
+										{this.state.lastErr}
+									</div>
+									}
+
+								</div>
+								<div className="eight wide right aligned column">
 									<button className="ui button" type="submit">{addOrEditBtnTxt}</button>
 									<button className="ui button" name={LABELS.btnTxt['cancel']} onClick={ (e) => { e.preventDefault(); this.props.return('addDeviceVisible') }}>{returnOrCancelBtnTxt}</button>
 								</div>
